@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Food Recipe Search</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        .helloandsearch {
+            padding-top: 5rem;
+            text-align: center;
+        }
+
+        .hellotag {
+            color: green;
+            font-size: 3.5rem;
+        }
+
+        .searchinput {
+            height: 3rem;
+            width: 25rem;
+            border-radius: 25px;
+            font-size: 1.5rem;
+        }
+
+        #searchion1 {
+            color: green;
+            height: 3rem;
+            cursor: pointer;
+            font-size: 2rem;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        /* #results {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        } */
+
+        #results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 2fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .Receipe-name {
+            font-size: larger;
+            font-family: 'Times New Roman', Times, serif;
+            color: green;
+        }
+
+        .image-source {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: larger;
+            color: rgb(248, 67, 67);
+        }
+
+        .recipedetails {
+            font-size: x-large;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+            color: blue;
+        }
+
+        .foodreceiprdiv {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        .foodreceiprdiv img {
+            max-width: 100%;
+            height: auto;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="helloandsearch">
+        <h1 class="hellotag">Hello, let's search for the best food recipe</h1>
+        <div>
+            <form id="searchForm" action="javascript:void(0);">
+                <label for="search"></label>
+                <input type="search" id="search" class="searchinput">
+                <i class="fas fa-search" id="searchion1"></i>
+            </form>
+            <div id="results"> </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('searchion1').addEventListener('click', function() {
+            const search = document.getElementById('search').value;
+            const appId = 'ce3f623f';
+            const apiKey = '12bccdffdc4aa29d31e8e1202361a8e1';
+            const url = `https://api.edamam.com/search?q=${search}&app_id=${appId}&app_key=${apiKey}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '';
+
+                    data.hits.forEach(hit => {
+                        const recipe = hit.recipe;
+                        const recipeDiv = document.createElement('div');
+                        recipeDiv.classList.add('foodreceiprdiv');
+                        recipeDiv.innerHTML = `
+                            <h2 class="Receipe-name">${recipe.label}</h2>
+                            <img src="${recipe.image}" alt="${recipe.label}">
+                            <p class="image-source">Source: ${recipe.source}</p>
+                            <a class="recipedetails" href="${recipe.url}" target="_blank">View Recipe</a>
+                        `;
+                        resultsDiv.appendChild(recipeDiv);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
